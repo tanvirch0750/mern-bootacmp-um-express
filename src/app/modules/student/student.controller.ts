@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { Student } from './student.interface';
+import { IStudent } from './student.interface';
 import { StudentServices } from './student.service';
 import studentValidationSchema from './student.validation';
 
 const createStudent = async (req: Request, res: Response) => {
     try {
-        const studentData: Student = req.body.student as unknown as Student;
+        const studentData: IStudent = req.body.student as unknown as IStudent;
 
         const zodParseData = studentValidationSchema.parse(studentData);
 
@@ -16,11 +16,11 @@ const createStudent = async (req: Request, res: Response) => {
             message: 'Student is created successfully',
             data: result,
         });
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
         res.status(500).json({
             success: false,
-            message: 'Something went wrong',
+            message: error.message || 'Something went wrong',
             error: error,
         });
     }

@@ -1,3 +1,5 @@
+import { HydratedDocument, Model } from 'mongoose';
+
 export type Guardian = {
     fatherName: string;
     fatherOccupation: string;
@@ -33,7 +35,7 @@ export type BloodGroup =
     | 'O+'
     | 'O-';
 
-export type Student = {
+export type IStudent = {
     id: string;
     name: UserName;
     email: string;
@@ -50,3 +52,16 @@ export type Student = {
     profileImage?: string;
     isActive: ActiveStatus;
 };
+
+// type for custom instance method (put all student instance methods in this interface)
+export type IStudentMethods = {
+    isUserExist(id: string): Promise<IStudent | null>;
+};
+
+// create a new model type that knows abour IStudentMehtods
+// export type IStudentModel = Model<IStudent, {}, IStudentMethods>;
+
+// for both instance and static methods
+export interface IStudentModel extends Model<IStudent, {}, IStudentMethods> {
+    isUserExist(id: string): Promise<IStudent | null>;
+}

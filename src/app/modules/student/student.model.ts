@@ -2,8 +2,10 @@ import { Schema, model } from 'mongoose';
 import {
     Guardian,
     LocalGuardian,
-    Student,
+    IStudent,
     UserName,
+    IStudentModel,
+    IStudentMethods,
 } from './student.interface';
 import { activeStatus, bloodGroups, gender } from './student.constant';
 import { capitalizeString } from '../../utils/utilityFunctions';
@@ -80,7 +82,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
     },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>({
     id: {
         type: String,
         required: [true, 'ID is required'],
@@ -149,4 +151,19 @@ const studentSchema = new Schema<Student>({
     },
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+// createing a custom instance method
+studentSchema.methods.isUserExist = async function (id: string) {
+    const existingUser = await StudentModel.findOne({ id });
+    return existingUser;
+};
+
+// static method
+studentSchema.statics.isUserExist = async function (id: string) {
+    const existingUser = await StudentModel.findOne({ id });
+    return existingUser;
+};
+
+export const StudentModel = model<IStudent, IStudentModel>(
+    'Student',
+    studentSchema,
+);
