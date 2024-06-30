@@ -14,12 +14,12 @@ export default [
         },
 
         rules: {
-            '@typescript-eslint/no-unused-vars': 'error',
+            '@typescript-eslint/no-unused-vars': ['error'],
             // to enforce using type for object type definitions, can be type or interface
             '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
             '@typescript-eslint/no-unused-expressions': 'error',
             '@typescript-eslint/prefer-const': 'error',
-            '@typescript-eslint/no-console': 'warn',
+            '@typescript-eslint/no-console': 'error',
             '@typescript-eslint/no-undef': 'error',
         },
         globals: {

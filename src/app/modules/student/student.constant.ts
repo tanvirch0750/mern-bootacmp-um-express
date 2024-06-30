@@ -10,5 +10,5 @@ export const bloodGroups: BloodGroup[] = [
     'O+',
     'O-',
 ];
-export const gender: Gender[] = ['female', 'male'];
+export const gender: Gender[] = ['female', 'male', 'other'];
 export const activeStatus: ActiveStatus[] = ['active', 'blocked'];
