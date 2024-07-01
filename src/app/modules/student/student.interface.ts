@@ -52,6 +52,7 @@ export type IStudent = {
     localGuardian: LocalGuardian;
     profileImage?: string;
     isActive: ActiveStatus;
+    isDeleted: boolean;
 };
 
 // type for custom instance method (put all student instance methods in this interface)

@@ -34,8 +34,26 @@ const getSingleStudentFromDB = async (id: string) => {
     return result;
 };
 
+const updateStudentFromDB = async (
+    id: string,
+    updatedStudentData: Partial<IStudent>,
+) => {
+    console.log('updated data', updatedStudentData);
+    const result = await StudentModel.updateOne({ id }, updatedStudentData);
+
+    return result;
+};
+
+const deleteStudentFromDB = async (id: string) => {
+    const result = await StudentModel.updateOne({ id }, { isDeleted: true });
+
+    return result;
+};
+
 export const StudentServices = {
     createStudenIntoDB,
     getAllStudentsFromDB,
     getSingleStudentFromDB,
+    deleteStudentFromDB,
+    updateStudentFromDB,
 };
