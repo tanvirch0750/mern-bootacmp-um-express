@@ -37,6 +37,7 @@ export type BloodGroup =
 
 export type IStudent = {
     id: string;
+    password: string;
     name: UserName;
     email: string;
     avatar?: string;

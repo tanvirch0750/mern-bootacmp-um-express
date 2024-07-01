@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
     Guardian,
     LocalGuardian,
@@ -9,6 +10,7 @@ import {
 } from './student.interface';
 import { activeStatus, bloodGroups, gender } from './student.constant';
 import { capitalizeString } from '../../utils/utilityFunctions';
+import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
     firstName: {
@@ -88,6 +90,11 @@ const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>({
         required: [true, 'ID is required'],
         unique: true,
     },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+        maxLength: [20, 'Password can not be more thann 20 characters'],
+    },
     name: {
         type: userNameSchema,
         required: [true, 'Name is required'],
@@ -149,6 +156,25 @@ const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>({
     profileImage: {
         type: String,
     },
+});
+
+// pre middleware / hook: will work on create() and save() function - to hash pass
+studentSchema.pre('save', async function (next) {
+    const user = this;
+
+    user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_salt_rounds),
+    );
+
+    next();
+});
+
+// post middleware / hook
+studentSchema.post('save', function (doc, next) {
+    doc.password = '';
+
+    next();
 });
 
 // createing a custom instance method
