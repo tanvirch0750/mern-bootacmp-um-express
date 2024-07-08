@@ -1,4 +1,4 @@
-import { HydratedDocument, Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export type Guardian = {
     fatherName: string;
@@ -23,8 +23,6 @@ export type LocalGuardian = {
 
 export type Gender = 'male' | 'female' | 'other';
 
-export type ActiveStatus = 'active' | 'blocked';
-
 export type BloodGroup =
     | 'A+'
     | 'A-'
@@ -37,10 +35,9 @@ export type BloodGroup =
 
 export type IStudent = {
     id: string;
-    password: string;
+    user: Types.ObjectId | string;
     name: UserName;
     email: string;
-    avatar?: string;
     gender: Gender;
     dateOfBirth: string;
     contactNo: string;
@@ -51,7 +48,6 @@ export type IStudent = {
     guardian: Guardian;
     localGuardian: LocalGuardian;
     profileImage?: string;
-    isActive: ActiveStatus;
     isDeleted: boolean;
 };
 

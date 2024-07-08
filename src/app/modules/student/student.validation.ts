@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { capitalizeString } from '../../utils/utilityFunctions';
-import { gender } from './student.constant';
 
 // UserName schema
 const userNameValidatorSchema = z.object({
@@ -89,20 +88,14 @@ const bloodGroupsEnum = z.enum([
     'O+',
     'O-',
 ]);
-const activeStatusEnum = z.enum(['active', 'blocked']);
 
 // Student schema
 const studentValidationSchema = z.object({
-    id: z.string({
-        required_error: 'ID is required',
-        invalid_type_error: 'ID must be a string',
+    user: z.string({
+        required_error: 'User Id is required',
+        invalid_type_error: 'User id must be a string',
     }),
-    password: z
-        .string({
-            required_error: 'Password is required',
-            invalid_type_error: 'Password must be a string',
-        })
-        .max(20, { message: 'Password can not be more thann 20 characters' }),
+
     name: userNameValidatorSchema,
     gender: genderEnum,
     dateOfBirth: z.string({
@@ -133,8 +126,7 @@ const studentValidationSchema = z.object({
         invalid_type_error: 'Permanent Address must be a string',
     }),
     guardian: guardianValidatorSchema,
-    avatar: z.string().optional(),
-    isActive: activeStatusEnum.default('active'),
+
     localGuardian: localGuardianValidatorSchema,
     profileImage: z.string().optional(),
     isDeleted: z.boolean().default(false),

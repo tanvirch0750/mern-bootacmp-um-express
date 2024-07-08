@@ -1,16 +1,14 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { capitalizeString } from '../../utils/utilityFunctions';
+import { bloodGroups, gender } from './student.constant';
 import {
     Guardian,
-    LocalGuardian,
     IStudent,
-    UserName,
-    IStudentModel,
     IStudentMethods,
+    IStudentModel,
+    LocalGuardian,
+    UserName,
 } from './student.interface';
-import { activeStatus, bloodGroups, gender } from './student.constant';
-import { capitalizeString } from '../../utils/utilityFunctions';
-import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
     firstName: {
@@ -91,11 +89,13 @@ const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>(
             required: [true, 'ID is required'],
             unique: true,
         },
-        password: {
-            type: String,
-            required: [true, 'Password is required'],
-            maxLength: [20, 'Password can not be more thann 20 characters'],
+        user: {
+            type: Schema.Types.ObjectId,
+            required: [true, 'User id is required'],
+            unique: true,
+            ref: 'User',
         },
+
         name: {
             type: userNameSchema,
             required: [true, 'Name is required'],
@@ -142,14 +142,6 @@ const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>(
             type: guardianSchema,
             required: [true, 'Guardian information is required'],
         },
-        avatar: {
-            type: String,
-        },
-        isActive: {
-            type: String,
-            enum: activeStatus,
-            default: 'active',
-        },
         localGuardian: {
             type: localGuardianSchema,
             required: [true, 'Local Guardian information is required'],
@@ -166,27 +158,9 @@ const studentSchema = new Schema<IStudent, IStudentModel, IStudentMethods>(
         toJSON: {
             virtuals: true,
         },
+        timestamps: true,
     },
 );
-
-// pre document middleware / hook: will work on create() and save() function - to hash pass
-studentSchema.pre('save', async function (next) {
-    const user = this;
-
-    user.password = await bcrypt.hash(
-        user.password,
-        Number(config.bcrypt_salt_rounds),
-    );
-
-    next();
-});
-
-// post document middleware / hook
-studentSchema.post('save', function (doc, next) {
-    doc.password = '';
-
-    next();
-});
 
 // query middleware - to remove that is isDeleted true
 studentSchema.pre('find', function (next) {

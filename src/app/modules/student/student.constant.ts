@@ -1,4 +1,4 @@
-import { ActiveStatus, BloodGroup, Gender } from './student.interface';
+import { BloodGroup, Gender } from './student.interface';
 
 export const bloodGroups: BloodGroup[] = [
     'A+',
@@ -11,4 +11,3 @@ export const bloodGroups: BloodGroup[] = [
     'O-',
 ];
 export const gender: Gender[] = ['female', 'male', 'other'] as const;
-export const activeStatus: ActiveStatus[] = ['active', 'blocked'];
