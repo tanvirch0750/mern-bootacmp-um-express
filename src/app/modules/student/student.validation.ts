@@ -90,46 +90,52 @@ const bloodGroupsEnum = z.enum([
 ]);
 
 // Student schema
-const studentValidationSchema = z.object({
-    user: z.string({
-        required_error: 'User Id is required',
-        invalid_type_error: 'User id must be a string',
-    }),
+const createStudentValidationSchema = z.object({
+    body: z.object({
+        password: z
+            .string({
+                required_error: 'Password is required',
+                invalid_type_error: 'Password must be a string',
+            })
+            .max(20, {
+                message: 'Password lenghth can not be more than 20 characters',
+            }),
+        student: z.object({
+            name: userNameValidatorSchema,
+            gender: genderEnum,
+            dateOfBirth: z.string({
+                required_error: 'Date of Birth is required',
+                invalid_type_error: 'Date of Birth must be a string',
+            }),
+            email: z
+                .string({
+                    required_error: 'Email is required',
+                    invalid_type_error: 'Email must be a string',
+                })
+                .email({ message: 'Invalid email address' }),
+            contactNo: z.string({
+                required_error: 'Contact Number is required',
+                invalid_type_error: 'Contact Number must be a string',
+            }),
+            emergencyContactNo: z.string({
+                required_error: 'Emergency Contact Number is required',
+                invalid_type_error: 'Emergency Contact Number must be a string',
+            }),
+            bloodGroup: bloodGroupsEnum.optional(),
+            presentAddress: z.string({
+                required_error: 'Present Address is required',
+                invalid_type_error: 'Present Address must be a string',
+            }),
+            permanentAddress: z.string({
+                required_error: 'Permanent Address is required',
+                invalid_type_error: 'Permanent Address must be a string',
+            }),
+            guardian: guardianValidatorSchema,
 
-    name: userNameValidatorSchema,
-    gender: genderEnum,
-    dateOfBirth: z.string({
-        required_error: 'Date of Birth is required',
-        invalid_type_error: 'Date of Birth must be a string',
+            localGuardian: localGuardianValidatorSchema,
+            profileImage: z.string().optional(),
+        }),
     }),
-    email: z
-        .string({
-            required_error: 'Email is required',
-            invalid_type_error: 'Email must be a string',
-        })
-        .email({ message: 'Invalid email address' }),
-    contactNo: z.string({
-        required_error: 'Contact Number is required',
-        invalid_type_error: 'Contact Number must be a string',
-    }),
-    emergencyContactNo: z.string({
-        required_error: 'Emergency Contact Number is required',
-        invalid_type_error: 'Emergency Contact Number must be a string',
-    }),
-    bloodGroup: bloodGroupsEnum.optional(),
-    presentAddress: z.string({
-        required_error: 'Present Address is required',
-        invalid_type_error: 'Present Address must be a string',
-    }),
-    permanentAddress: z.string({
-        required_error: 'Permanent Address is required',
-        invalid_type_error: 'Permanent Address must be a string',
-    }),
-    guardian: guardianValidatorSchema,
-
-    localGuardian: localGuardianValidatorSchema,
-    profileImage: z.string().optional(),
-    isDeleted: z.boolean().default(false),
 });
 
-export default studentValidationSchema;
+export default createStudentValidationSchema;
