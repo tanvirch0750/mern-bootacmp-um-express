@@ -39,7 +39,7 @@ export type IStudent = {
     name: UserName;
     email: string;
     gender: Gender;
-    dateOfBirth: string;
+    dateOfBirth: Date;
     contactNo: string;
     emergencyContactNo: string;
     bloodGroup?: BloodGroup;
@@ -48,6 +48,7 @@ export type IStudent = {
     guardian: Guardian;
     localGuardian: LocalGuardian;
     profileImage?: string;
+    admissionSemester: Types.ObjectId | string;
     isDeleted: boolean;
 };
 

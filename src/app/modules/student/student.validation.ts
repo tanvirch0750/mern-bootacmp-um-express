@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { capitalizeString } from '../../utils/utilityFunctions';
+import { bloodGroups, gender } from './student.constant';
 
 // UserName schema
 const userNameValidatorSchema = z.object({
@@ -74,20 +75,11 @@ const localGuardianValidatorSchema = z.object({
 });
 
 // Enum values
-const genderEnum = z.enum(['male', 'female', 'other'], {
+const genderEnum = z.enum([...gender] as [string, ...string[]], {
     required_error: 'Gender is required',
     invalid_type_error: 'Gender must be one of "male", "female", or "other"',
 });
-const bloodGroupsEnum = z.enum([
-    'A+',
-    'A-',
-    'B+',
-    'B-',
-    'AB+',
-    'AB-',
-    'O+',
-    'O-',
-]);
+const bloodGroupsEnum = z.enum([...bloodGroups] as [string, ...string[]]);
 
 // Student schema
 const createStudentValidationSchema = z.object({
@@ -103,9 +95,9 @@ const createStudentValidationSchema = z.object({
         student: z.object({
             name: userNameValidatorSchema,
             gender: genderEnum,
-            dateOfBirth: z.string({
+            dateOfBirth: z.date({
                 required_error: 'Date of Birth is required',
-                invalid_type_error: 'Date of Birth must be a string',
+                invalid_type_error: 'Date of Birth must be a date format',
             }),
             email: z
                 .string({
@@ -134,6 +126,7 @@ const createStudentValidationSchema = z.object({
 
             localGuardian: localGuardianValidatorSchema,
             profileImage: z.string().optional(),
+            admissionSemester: z.string(),
         }),
     }),
 });
