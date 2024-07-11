@@ -1,14 +1,32 @@
+import AppError from '../../errors/appError';
 import { IStudent } from './student.interface';
 import { StudentModel } from './student.model';
 
 const getAllStudentsFromDB = async () => {
-    const result = await StudentModel.find();
+    const result = await StudentModel.find()
+        .populate('admissionSemester')
+        .populate({
+            path: 'academicDepartment',
+            populate: {
+                path: 'academicFaculty',
+            },
+        });
 
     return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
-    const result = await StudentModel.findOne({ id });
+    const result = await StudentModel.findOne({ id })
+        .populate('admissionSemester')
+        .populate({
+            path: 'academicDepartment',
+            populate: {
+                path: 'academicFaculty',
+            },
+        });
+
+    if (!result)
+        throw new AppError(404, `No Student found with (${id}) this id`);
 
     return result;
 };

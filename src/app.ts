@@ -11,17 +11,17 @@ app.use(express.json());
 app.use(cors());
 
 // application routes
-// application routes
 app.use('/api/v1', router);
 
+// response to root route
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello world');
+    res.send('Root api route');
 });
+
+//Not Found
+app.all('*', notFound);
 
 // gloabla error handeling
 app.use(globalErrorHandler);
-
-//Not Found
-app.use(notFound);
 
 export default app;
