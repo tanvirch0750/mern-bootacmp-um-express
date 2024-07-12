@@ -32,7 +32,7 @@ const updateStudent = catchAsync(async (req, res) => {
 
     const studentData: Partial<IStudent> = req.body;
 
-    const result = await StudentServices.updateStudentFromDB(
+    const result = await StudentServices.updateStudentIntoDB(
         studentId,
         studentData,
     );
