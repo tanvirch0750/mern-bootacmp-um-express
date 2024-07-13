@@ -15,7 +15,7 @@ app.use('/api/v1', router);
 
 // response to root route
 app.get('/', (req: Request, res: Response) => {
-    res.send('Root api route');
+    res.send('Welcome to programming hero university');
 });
 
 //Not Found

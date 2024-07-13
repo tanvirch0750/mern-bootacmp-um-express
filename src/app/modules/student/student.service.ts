@@ -1,19 +1,31 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/appError';
 import { User } from '../user/user.model';
+import { studentSearchableFields } from './student.constant';
 import { IStudent } from './student.interface';
 import { StudentModel } from './student.model';
 
-const getAllStudentsFromDB = async () => {
-    const result = await StudentModel.find()
-        .populate('admissionSemester')
-        .populate({
-            path: 'academicDepartment',
-            populate: {
-                path: 'academicFaculty',
-            },
-        });
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+    const studentQuery = new QueryBuilder(
+        StudentModel.find()
+            .populate('admissionSemester')
+            .populate({
+                path: 'academicDepartment',
+                populate: {
+                    path: 'academicFaculty',
+                },
+            }),
+        query,
+    )
+        .search(studentSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await studentQuery.execute();
 
     return result;
 };
@@ -126,7 +138,7 @@ const deleteStudentFromDB = async (id: string) => {
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
-        throw new Error('Failed to delete student');
+        throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student');
     }
 };
 

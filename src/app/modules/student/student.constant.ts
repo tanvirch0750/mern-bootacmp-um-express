@@ -11,3 +11,9 @@ export const bloodGroups: BloodGroup[] = [
     'O-',
 ];
 export const gender: Gender[] = ['female', 'male', 'other'] as const;
+
+export const studentSearchableFields = [
+    'email',
+    'name.firstName',
+    'presentAddress',
+];

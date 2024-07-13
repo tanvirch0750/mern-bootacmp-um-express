@@ -6,16 +6,19 @@ import {
     handleBadValueError,
     handleCastErrorDB,
     handleDuplicateFieldsErrorDB,
+    handleDuplicateKeyErrorInTrsAndRb,
     handleValidationErrorDB,
+    handleValidationErrorTrsAndRb,
     handleZodError,
 } from '../errors/common/commonErrors';
 
 const sendErrorToDev = (err: AppError, res: Response) => {
     res.status(err.statusCode).json({
+        statusCode: err.statusCode,
         success: false,
         status: err.status,
         message: err.message,
-        errorMessages: err.errorMessages,
+        errorSources: err.errorSources,
         stack: err?.stack,
         error: err,
     });
@@ -28,7 +31,7 @@ const sendErrorToProd = (err: AppError, res: Response) => {
             success: false,
             status: err.status,
             message: err.message,
-            errorMessages: err.errorMessages,
+            errorSources: err.errorSources,
         });
     } else {
         // log the error
@@ -55,6 +58,17 @@ const allErrors = (err: any) => {
     }
     if (config.env === 'production') {
         if (err?.code === 2) error = handleBadValueError();
+    }
+
+    // special cases when use trasaction and rollback
+    if (err.message.includes('11000')) {
+        // duplicate error
+        error = handleDuplicateKeyErrorInTrsAndRb(err);
+    }
+    if (err.message.includes('ValidationError')) {
+        // validation error error
+
+        error = handleValidationErrorTrsAndRb(err);
     }
 
     return error;

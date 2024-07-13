@@ -95,10 +95,18 @@ const createStudentValidationSchema = z.object({
         student: z.object({
             name: userNameValidatorSchema,
             gender: genderEnum,
-            dateOfBirth: z.date({
-                required_error: 'Date of Birth is required',
-                invalid_type_error: 'Date of Birth must be a date format',
-            }),
+            dateOfBirth: z
+                .string()
+                .refine(
+                    (val) => {
+                        // Regex to validate the format YYYY-MM-DD
+                        return /^\d{4}-\d{2}-\d{2}$/.test(val);
+                    },
+                    {
+                        message: 'Invalid date format, expected YYYY-MM-DD',
+                    },
+                )
+                .transform((val) => new Date(val)),
             email: z
                 .string({
                     required_error: 'Email is required',
