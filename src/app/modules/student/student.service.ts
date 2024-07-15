@@ -25,13 +25,12 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
         .paginate()
         .fields();
 
-    const result = await studentQuery.execute();
-
+    const result = await studentQuery.modelQuery;
     return result;
 };
 
 const getSingleStudentFromDB = async (id: string) => {
-    const result = await StudentModel.findOne({ id })
+    const result = await StudentModel.findById(id)
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
@@ -84,8 +83,8 @@ const updateStudentIntoDB = async (id: string, payload: Partial<IStudent>) => {
 
     console.log(modifiedUpdatedData);
 
-    const result = await StudentModel.findOneAndUpdate(
-        { id },
+    const result = await StudentModel.findByIdAndUpdate(
+        id,
         modifiedUpdatedData,
         {
             new: true,
@@ -108,8 +107,8 @@ const deleteStudentFromDB = async (id: string) => {
             );
         }
 
-        const deletedStudent = await StudentModel.findOneAndUpdate(
-            { id },
+        const deletedStudent = await StudentModel.findByIdAndUpdate(
+            id,
             { isDeleted: true },
             { new: true, session },
         );
@@ -121,8 +120,10 @@ const deleteStudentFromDB = async (id: string) => {
             );
         }
 
-        const deletedUser = await User.findOneAndUpdate(
-            { id },
+        // get user _id from deletedStudent
+        const userId = deletedStudent.user;
+        const deletedUser = await User.findByIdAndUpdate(
+            userId,
             { isDeleted: true },
             { new: true, session },
         );
