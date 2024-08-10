@@ -7,6 +7,7 @@ export type IUser = {
     id: string;
     password: string;
     needsPasswordChange: boolean;
+    passwordChangedAt?: Date;
     role: IRole;
     status: IStatus;
     isDeleted: boolean;
@@ -21,6 +22,15 @@ export type IUserMethods = {
 // Define the type for the user model, including both instance and static methods
 export interface IUserModel
     extends Model<IUser, Record<string, never>, IUserMethods> {
-    // Example of a static method returning a promise with a string
-    anyInstaceMethod(): Promise<string>;
+    //static methods for checking if the user exist
+    isUserExistsByCustomId(id: string): Promise<IUser>;
+    //static methods for checking if passwords are matched
+    isPasswordMatched(
+        plainTextPassword: string,
+        hashedPassword: string,
+    ): Promise<boolean>;
+    isJWTIssuedBeforePasswordChanged(
+        passwordChangedTimestamp: Date,
+        jwtIssuedTimestamp: number,
+    ): boolean;
 }
